@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import "./Countdown.css";
 
 function Countdown({ onBirthdayReached, birthdayReached }) {
-  const [time, setTime] = useState({ hours: 0, minutes: 0, seconds: 0 });
+  const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [prevTime, setPrevTime] = useState({
+    days: null,
     hours: null,
     minutes: null,
     seconds: null,
@@ -19,7 +20,7 @@ function Countdown({ onBirthdayReached, birthdayReached }) {
     // 🎂 SET YOUR BIRTHDAY DATE & TIME HERE 🎂
     // ═══════════════════════════════════════════════════════════════
 
-    const targetDate = new Date("2025-12-18T00:00:00");
+    const targetDate = new Date("2026-03-15T00:00:00");
 
     // 📝 HOW TO USE:
     // Replace the date above with your actual birthday
@@ -37,11 +38,12 @@ function Countdown({ onBirthdayReached, birthdayReached }) {
       const now = new Date();
       const diff = Math.max(0, targetDate - now);
 
-      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
       const seconds = Math.floor((diff / 1000) % 60);
 
-      setTime({ hours, minutes, seconds });
+      setTime({ days, hours, minutes, seconds });
 
       if (diff <= 0 && !birthdayReached) {
         onBirthdayReached();
@@ -86,6 +88,7 @@ function Countdown({ onBirthdayReached, birthdayReached }) {
   return (
     <section className="countdown">
       <div className="flip-timer">
+        <Digit value={time.days} label="Days" prevValue={prevTime.days} />
         <Digit value={time.hours} label="Hours" prevValue={prevTime.hours} />
         <Digit
           value={time.minutes}

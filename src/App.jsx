@@ -15,15 +15,18 @@ gsap.registerPlugin(ScrollToPlugin);
 function App() {
   const [currentPage, setCurrentPage] = useState(1); // Start at 1 for Countdown page
 
-  // ⚠️ FOR TESTING: Comment out lines 18-21 to reset on every reload
   // Check localStorage to persist birthday reached state
+  // Only trust the cached value if the birthday date has actually passed
   const [birthdayReached, setBirthdayReached] = useState(() => {
-    const saved = localStorage.getItem("birthdayReached");
-    return saved === "true";
+    const targetDate = new Date("2026-03-15T00:00:00");
+    const now = new Date();
+    if (now >= targetDate) {
+      return true; // Birthday has actually passed
+    }
+    // Birthday hasn't arrived yet — clear any stale cached value
+    localStorage.removeItem("birthdayReached");
+    return false;
   });
-
-  // ✅ FOR TESTING: Uncomment this line to always show countdown on reload
-  // const [birthdayReached, setBirthdayReached] = useState(false);
 
   const [showEffects, setShowEffects] = useState(false);
 
@@ -100,7 +103,7 @@ function App() {
               </>
             ) : (
               <>
-                Counting down to <span className="highlight">[Name]'s</span>{" "}
+                Counting down to <span className="highlight">Lati's</span>{" "}
                 special day 🎂
               </>
             )}
